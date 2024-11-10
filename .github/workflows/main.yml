@@ -3,8 +3,10 @@ name: Web Build
 on:
   push:
     branches:
+      - master
       - main
-      - dev
+
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,7 +14,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python 3.11.6
       uses: actions/setup-python@v2
@@ -31,7 +33,9 @@ jobs:
 
     - name: Build with Flet
       run: |
-        flet build web
+            echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, USER: ${GITHUB_REPOSITORY%/*}, PROJECT_BASE_URL: ${GITHUB_REPOSITORY#*/}"
+            flutter config --no-analytics
+            flet build web --base-url ${GITHUB_REPOSITORY#*/} --route-url-strategy hash
 
     - name: Upload artifacts
       uses: actions/upload-pages-artifact@v3
