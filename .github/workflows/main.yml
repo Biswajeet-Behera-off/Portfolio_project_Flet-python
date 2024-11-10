@@ -34,7 +34,7 @@ jobs:
         flet build web
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-pages-artifact@v3
       with:
         name: package
         path: |
