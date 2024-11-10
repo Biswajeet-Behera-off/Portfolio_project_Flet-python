@@ -33,9 +33,9 @@ jobs:
 
     - name: Build with Flet
       run: |
-            echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, USER: ${GITHUB_REPOSITORY%/*}, PROJECT_BASE_URL: ${GITHUB_REPOSITORY#*/}"
-            flutter config --no-analytics
-            flet build web --base-url ${GITHUB_REPOSITORY#*/} --route-url-strategy hash
+        echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY, USER: ${GITHUB_REPOSITORY%/*}, PROJECT_BASE_URL: ${GITHUB_REPOSITORY#*/}"
+        flutter config --no-analytics
+        flet build web --base-url "/${GITHUB_REPOSITORY#*/}" --route-url-strategy hash
 
     - name: Upload artifacts
       uses: actions/upload-pages-artifact@v3
