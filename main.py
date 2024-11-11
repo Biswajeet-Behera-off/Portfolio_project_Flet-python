@@ -116,7 +116,7 @@ def main(page: ft.Page):
         image_fit=ft.ImageFit.COVER,
         image_opacity=0.5,
         alignment=ft.alignment.center,
-        height=700 if page.window_width < 768 else 700,
+        height=700 if page.window.width < 768 else 700,
     )
     
     page.on_resized = update_front_section
