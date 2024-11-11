@@ -8,12 +8,16 @@ on:
 
   workflow_dispatch:
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+    PYTHONIOENCODING: utf-8
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-    
-    env:
-      PYTHONIOENCODING: utf-8
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
