@@ -1,7 +1,5 @@
 import flet as ft
 import base64
-import time
-import threading
 from datetime import datetime
 
 def main(page: ft.Page):
@@ -41,33 +39,9 @@ def main(page: ft.Page):
     with open("./assets/images/six.png", "rb") as image_file:
         six_image = base64.b64encode(image_file.read()).decode("utf-8")
     
-    
-    full_text = "This website is fully developed by me in Python FLET. To know more about FLET Python, visit 'https://flet.dev/'"
-    sub_text = ft.Text("", 
-        size="20", 
-        color=ft.colors.ON_SURFACE,
-        opacity=0.6,
-    )
-    animated_text_container = ft.AnimatedSwitcher(
-        sub_text,
-        duration=300,
-        transition=ft.AnimatedSwitcherTransition.FADE,
-        width=510
-    )
-    def typing_animation():
-        current_text = ""
-        for char in full_text:
-            current_text += char
-            sub_text.value = current_text
-            page.update()
-            time.sleep(0.05)
-        threading.Timer(5, typing_animation).start()
-    threading.Thread(target=typing_animation).start()
-    
-    
-    title_text = "Welcome to Playground"
+
     front_text = ft.Text(
-        "",
+        "Welcome to Playground",
         size=60,
         weight="bold",
         color=ft.colors.ON_SURFACE,
@@ -80,15 +54,20 @@ def main(page: ft.Page):
         duration=300,
         transition=ft.AnimatedSwitcherTransition.FADE,
     )
-    def title_animation():
-        current_text = ""
-        for char in title_text:
-            current_text += char
-            front_text.value = current_text
-            page.update()
-            time.sleep(0.05)
-        threading.Timer(7, title_animation).start()
-    threading.Thread(target=title_animation).start()
+    
+    sub_text = ft.Text(
+        "This website is fully developed by me in Python FLET. To know more about FLET Python, visit 'https://flet.dev/'", 
+        size="20", 
+        color=ft.colors.ON_SURFACE,
+        opacity=0.6,
+    )
+    animated_text_container = ft.AnimatedSwitcher(
+        sub_text,
+        duration=300,
+        transition=ft.AnimatedSwitcherTransition.FADE,
+        width=510
+    )
+    
     
     front_section = ft.Container(
         content=ft.ResponsiveRow(
