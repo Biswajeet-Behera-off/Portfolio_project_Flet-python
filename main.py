@@ -1,5 +1,5 @@
 import flet as ft
-import base64
+from parallax import parallax_effect
 import asyncio
 from datetime import datetime
 
@@ -12,43 +12,31 @@ async def main(page: ft.Page):
     page.vertical_alignment = 'center'
     page.horizontal_alignment = 'center'
     page.padding = 0
-        
-    loading = ft.Column(
-        controls=[
-            ft.ProgressRing(),
-            ft.Text("Loading portfolio...", color=ft.colors.WHITE),
+    page.bgcolor = "#365563"
+    
+    
+    loading_screen = ft.Container(
+    content=ft.Column(
+        [
+            ft.ProgressRing(color=ft.colors.AMBER_400, scale=1.5),
+            ft.Text("Loading portfolio ...", color=ft.colors.AMBER_100, size=20),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
-        
-    )
-    page.add(loading)
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+    ),
+    height=page.height,
+    width=page.width,
+    bgcolor=ft.colors.BLACK,
+    alignment=ft.alignment.center,
+)
+    page.add(ft.Container(
+    content=loading_screen,
+    alignment=ft.alignment.center,
+    expand=True,
+    bgcolor=ft.colors.BLACK,
+    height=page.height
+))
     page.update()
-    
-
-    with open("./assets/images/myimage.jpg", "rb") as image_file:
-        base64_image = base64.b64encode(image_file.read()).decode("utf-8")
-    
-    with open("./assets/images/home-bg.jpg", "rb") as image_file:
-        base64_image_hbg = base64.b64encode(image_file.read()).decode("utf-8")
-    
-    with open("./assets/images/one.png", "rb") as image_file:
-        one_image = base64.b64encode(image_file.read()).decode("utf-8")
-        
-    with open("./assets/images/two.png", "rb") as image_file:
-        two_image = base64.b64encode(image_file.read()).decode("utf-8")
-        
-    with open("./assets/images/three.png", "rb") as image_file:
-        three_image = base64.b64encode(image_file.read()).decode("utf-8")
-        
-    with open("./assets/images/four.png", "rb") as image_file:
-        four_image = base64.b64encode(image_file.read()).decode("utf-8")
-        
-    with open("./assets/images/five.png", "rb") as image_file:
-        five_image = base64.b64encode(image_file.read()).decode("utf-8")
-        
-    with open("./assets/images/six.png", "rb") as image_file:
-        six_image = base64.b64encode(image_file.read()).decode("utf-8")
 
     async def typewriter_effect(page: ft.Page, type_text: ft.Text, animate_text: str):
         while True:
@@ -70,17 +58,20 @@ async def main(page: ft.Page):
     async def load_main_content():
         await asyncio.sleep(3)
         
-        type_text = ft.Text("", size=24, italic=True, color=ft.colors.LIGHT_BLUE_200, col={"xs": 12, "md": 6, "lg": 3})
+        type_text = ft.Text("",size=24, italic=True, color=ft.colors.LIGHT_BLUE_200, col={"xs": 12, "md": 6, "lg": 3})
         asyncio.create_task(typewriter_effect(page, type_text, "Python Developer | Data Analyst"))
+        
+        parallax = parallax_effect(900,600)
+
         front_section = ft.Container(
             content=ft.ResponsiveRow(
                 [
                     ft.Column(
                         controls=[
                             ft.Text("👋 Hello, I'm", size=20, color=ft.colors.GREY,col={"xs": 12, "md": 6, "lg": 3}),
-                            ft.Text("Biswajeet Behera", size=40, weight=ft.FontWeight.BOLD, color=ft.colors.WHITE,col={"xs": 12, "md": 6, "lg": 3}),
                             type_text,
                             ft.Text("Building clean, insightful, and efficient solutions.", size=16, color=ft.colors.GREY_300, col={"xs": 12, "md": 6, "lg": 3}),
+                            ft.Text("This web page customized in Flet library with python.", size=16, color=ft.colors.GREY_300, col={"xs": 12, "md": 6, "lg": 3}),
                             ft.ElevatedButton("Download Resume", icon=ft.icons.FILE_DOWNLOAD, bgcolor=ft.colors.BLUE_400, color=ft.colors.WHITE, col={"xs": 12, "md": 6, "lg": 3}),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
@@ -90,7 +81,8 @@ async def main(page: ft.Page):
                 ],
                 alignment=ft.MainAxisAlignment.CENTER
             ),
-            image= ft.DecorationImage(src_base64=base64_image_hbg, fit=ft.ImageFit.COVER,opacity=0.5),
+            image= ft.DecorationImage(src="images/home-bg.jpg", fit=ft.ImageFit.COVER,opacity=0.7),
+            
             alignment=ft.alignment.center,
             height=700,
         )
@@ -102,7 +94,7 @@ async def main(page: ft.Page):
         
         profile_image = ft.Container(
             content=ft.Image(
-                src_base64=base64_image,
+                src="images/myimage.jpg",
                 width=210,
                 height=230,
                 fit=ft.ImageFit.CONTAIN
@@ -111,74 +103,63 @@ async def main(page: ft.Page):
             alignment=ft.alignment.center,
         )
         
-        profile_card = ft.Container(
-            content=ft.Column(
-                [
-                    ft.Text("Biswajeet Behera", size=30, weight="bold", color=ft.colors.ON_SURFACE),
-                    ft.Text("work.biswajeetbehera@gmail.com", size=15, color=ft.colors.ON_SURFACE),
-                    ft.Text("756125, Basudevpur,Bhadrak, Odisha", size=15, color=ft.colors.ON_SURFACE),
-                    
-                    ft.ResponsiveRow(
-                        [
-                            ft.Container(
-                                content=ft.Row(
-                                    [
-                                        ft.Text("LinkedIn:", color=ft.colors.ON_SURFACE),
-                                        ft.Text("linkedin.com/in/biswajeetbehera-off", color=ft.colors.PRIMARY),
-                                    ],
-                                    spacing=5
+        profile_card = ft.Stack(
+            [
+                parallax,
+                ft.Column(
+                    [
+                        profile_image,
+                        ft.Text("Biswajeet Behera", size=30, weight="bold", color=ft.colors.ON_SURFACE),
+                        ft.Text("work.biswajeetbehera@gmail.com", size=15, color=ft.colors.ON_SURFACE),
+                        ft.Text("756125, Basudevpur,Bhadrak, Odisha", size=15, color=ft.colors.ON_SURFACE),
+                        ft.ResponsiveRow(
+                            [
+                                ft.Container(
+                                    ft.ElevatedButton(
+                                        "LinkedIn",
+                                        height=50,
+                                        url="http://www.linkedin.com/in/biswajeetbehera-off",
+                                        style=ft.ButtonStyle(
+                                            padding=ft.padding.symmetric(horizontal=20)),
+                                    ),
+                                    padding=ft.padding.symmetric(horizontal=10, vertical=5),
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 3}
                                 ),
-                                col={"xs": 12, "sm": 6},
-                                url="http://www.linkedin.com/in/biswajeetbehera-off"
-                            )
-                        ]
-                    ),
-                    ft.ResponsiveRow(
-                        [
-                            ft.Container(
-                                content=ft.Row(
-                                    [
-                                        ft.Text("GitHub:", color=ft.colors.ON_SURFACE),
-                                        ft.Text("Github.com/Biswajeet-Behera-off", color=ft.colors.PRIMARY),
-                                    ],
-                                    spacing=5
+                                ft.Container(
+                                    ft.ElevatedButton(
+                                        "Github",
+                                        height=50,
+                                        url="https://github.com/Biswajeet-Behera-off",
+                                        style=ft.ButtonStyle(
+                                            padding=ft.padding.symmetric(horizontal=20)),
+                                    ),
+                                    padding=ft.padding.symmetric(horizontal=10, vertical=5),
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 3}
                                 ),
-                                col={"xs": 12, "sm": 6},
-                                url="https://github.com/Biswajeet-Behera-off"
-                            )
-                        ]
-                    ),
-                    ft.ResponsiveRow(
-                        [
-                            ft.Container(
-                                ft.OutlinedButton(
-                                    "Instagram",
-                                    width=200,
-                                    height=50,
-                                    url="https://www.instagram.com/biswajeetbehera.off?igsh=b2JyM2w0Z214eXc0",
-                                    
+                                ft.Container(
+                                    ft.ElevatedButton(
+                                        "Instagram",
+                                        height=50,
+                                        url="https://www.instagram.com/biswajeetbehera.off",
+                                        style=ft.ButtonStyle(
+                                            padding=ft.padding.symmetric(horizontal=20)),
+                                    ),
+                                    padding=ft.padding.symmetric(horizontal=10, vertical=5),
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 3}
                                 ),
-                                col={"xs": 12, "sm": 6, "md": 4, "lg": 3}
-                            ),
-                        ]
-                    )
-                ],
-                spacing=10,
-            ),
-            col={"xs": 12, "sm": 12, "md": 8, "lg": 9},
-        )
-        
-
-        profile_section = ft.Container(
-            content=ft.ResponsiveRow(
-                [
-                    profile_image, 
-                    profile_card
-                ],
-                alignment=ft.MainAxisAlignment.START,  # Align items to the start of the row
-            ),
-            border=ft.border.all(3,color=ft.colors.AMBER),
-            padding=20
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            run_spacing=10
+                        ),
+                    ],
+                    spacing=10,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                ),
+            ],
+            alignment=ft.Alignment(0.0, 0.0),
+            width=900,
+            height=600,
         )
 
 
@@ -362,7 +343,7 @@ async def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src_base64=one_image, width=700, height=200, fit=ft.ImageFit.CONTAIN),
+                                ft.Image(src="images/one.png", width=700, height=200, fit=ft.ImageFit.CONTAIN),
                                 ft.Text("Lung Cancer Analysis", size=16, weight="bold", color=ft.colors.ON_SURFACE),
                                 ft.Text("This project aims to analyze and predict lung cancer patient data using Python and machine-learning techniques.", opacity=0.6,color=ft.colors.ON_SURFACE)
                             ],
@@ -379,7 +360,7 @@ async def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src_base64=two_image, width=700, height=200, fit=ft.ImageFit.CONTAIN),
+                                ft.Image(src="images/two.png", width=700, height=200, fit=ft.ImageFit.CONTAIN),
                                 ft.Text("Restaurant Data Analysis using Power Bi", size=16, weight="bold", color=ft.colors.ON_SURFACE),
                                 ft.Text("Data-Driven Insights for a Restaurant Data Analysis. || Learning from Rishabh Mishra . As a Beginner Data analyst, I recently worked in restaurant data analysis.", opacity=0.6,color=ft.colors.ON_SURFACE)
                             ],
@@ -396,7 +377,7 @@ async def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src_base64=three_image, width=700, height=200, fit=ft.ImageFit.CONTAIN),
+                                ft.Image(src="images/three.png", width=700, height=200, fit=ft.ImageFit.CONTAIN),
                                 ft.Text("HR Analysis Report || Employee attrition trends data analysis", size=16, weight="bold", color=ft.colors.ON_SURFACE),
                                 ft.Text("Data-Driven Insights for an HR Analysis. || Learning from Rishabh Mishra, This is my Second Project on Power Bi. As a Beginner Data analyst, I recently worked on employee attrition trends Data analysis.", opacity=0.6,color=ft.colors.ON_SURFACE)
                             ],
@@ -413,7 +394,7 @@ async def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src_base64=four_image, width=700, height=200, fit=ft.ImageFit.CONTAIN),
+                                ft.Image(src="images/four.png", width=700, height=200, fit=ft.ImageFit.CONTAIN),
                                 ft.Text("BB ELECTRONICS SALES DATA ANALYSIS", size=16, weight="bold", color=ft.colors.ON_SURFACE),
                                 ft.Text("This project presents an analysis of electrinics sales data based on their two years of store sales using pivot tables and Formula in Excel and visualizing chart for Dashboarding.", opacity=0.6,color=ft.colors.ON_SURFACE)
                             ],
@@ -430,7 +411,7 @@ async def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src_base64=five_image, width=700, height=200, fit=ft.ImageFit.CONTAIN),
+                                ft.Image(src="images/five.png", width=700, height=200, fit=ft.ImageFit.CONTAIN),
                                 ft.Text("Superstore Sales Data Analysis", size=16, weight="bold", color=ft.colors.ON_SURFACE),
                                 ft.Text("This project presents an in-depth analysis of the Superstore Sales dataset, which encompasses over 51,000 records detailing customer orders, shipping modes, product categories, and financial metrics, such as sales, discount, profit, and shipping costs", opacity=0.6,color=ft.colors.ON_SURFACE)
                             ],
@@ -447,7 +428,7 @@ async def main(page: ft.Page):
                     ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src_base64=six_image, width=700, height=200, fit=ft.ImageFit.CONTAIN),
+                                ft.Image(src="images/six.png", width=700, height=200, fit=ft.ImageFit.CONTAIN),
                                 ft.Text("Walmart Sales Data Analysis", size=16, weight="bold", color=ft.colors.ON_SURFACE),
                                 ft.Text("This project involves setting up a Walmart sales database and performing an in-depth analysis to derive insights on sales performance, customer preferences, and product trends. SQL is used extensively for data loading, feature engineering, and analysis.", opacity=0.6,color=ft.colors.ON_SURFACE)
                             ],
@@ -461,7 +442,7 @@ async def main(page: ft.Page):
                         url="https://github.com/Biswajeet-Behera-off/Walmart_sales_data_analysis",
                         col={"xs": 12, "sm": 6, "md": 4, "lg": 3}
                     )
-                ]
+                ],
             )
         ]
 
@@ -504,7 +485,7 @@ async def main(page: ft.Page):
             ),
             padding=20,
             border_radius=8,
-            bgcolor="#848d9c",
+            bgcolor=ft.colors.BLUE_GREY_800,
             alignment=ft.alignment.center,
             width=650
         )
@@ -526,7 +507,7 @@ async def main(page: ft.Page):
             ft.Column(
                 [
                     front_section,
-                    profile_section,
+                    profile_card,
                     ft.Container(
                         content=skills_card,
                         alignment=ft.alignment.center,
@@ -536,10 +517,12 @@ async def main(page: ft.Page):
                         [
                             ft.Container(
                                 project,
-                                padding=20
+                                padding=20,
+                                
                             ) for project in project_cards
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        width=1111
                     ),
                     ft.Container(
                         content=contact_card,
@@ -553,7 +536,9 @@ async def main(page: ft.Page):
                     )
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
-                expand=True
+                expand=True,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=30
             )
         )
         page.update()
